@@ -20,7 +20,7 @@ $worker->name = 'BusinessWorker';
 $worker->count = 4;
 
 // 服务注册地址
-$registerAddress=$conf['REGISTER']['LISTEN_ADDRESS'].':'.$conf['REGISTER']['PORT'];
+$registerAddress=$conf['REGISTER']['LAN_IP'].':'.$conf['REGISTER']['LAN_PORT'];
 $worker->registerAddress = $registerAddress;
 
 // 如果不是在根目录启动，则运行runAll方法

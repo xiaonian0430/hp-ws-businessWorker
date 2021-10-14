@@ -1,4 +1,4 @@
-# hp-ws-gateway
+# hp-ws-businessWorker
 一款高性能支持分布式部署的实时通信框架。
 
 ## 服务器环境要求：
@@ -12,9 +12,18 @@
 
 - centos v7.0 或更高版本
 - php v7.0 或更高版本
+    - 安装 event 扩展
+    - 安装 pcntl 和 posix 扩展
+
+```
+# 1、安装event扩展依赖的libevent-devel包，命令行运行
+yum install libevent-devel -y
+
+# https://pecl.php.net/get/event-3.0.5.tgz
+```
 
 
-## 启动停止(Linux系统)
+## 启动停止
 
 ```
 #以debug方式启动

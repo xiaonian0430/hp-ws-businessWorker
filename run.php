@@ -6,7 +6,7 @@
  * @datetime: 2021-09-14 10:00
  */
 use Workerman\Worker;
-use \GatewayWorker\BusinessWorker;
+use GatewayWorker\BusinessWorker;
 
 ini_set('display_errors', 'on');
 defined('IN_PHAR') or define('IN_PHAR', boolval(\Phar::running(false)));
@@ -25,6 +25,7 @@ if(!extension_loaded('posix')) {
 
 //自动加载文件
 require_once SERVER_ROOT . '/core/autoload.php';
+require_once SERVER_ROOT . '/Events.php';
 
 $mode='produce';
 foreach ($argv as $item){
@@ -44,17 +45,19 @@ Worker::$stdoutFile = './tmp/log/error.log';
 Worker::$logFile = './tmp/log/workerman.log';
 
 // businessWorker 进程
-$worker = new BusinessWorker();
+$business = new BusinessWorker();
 
 // worker名称
-$worker->name = 'BusinessWorker';
+$business->name = CONFIG['BUSINESS']['SERVER_NAME'];
 
 // businessWorker进程数量
-$worker->count = 4;
+$business->count = CONFIG['BUSINESS']['PROCESS_COUNT'];
 
 // 服务注册地址
 $registerAddress=CONFIG['REGISTER']['LAN_IP'].':'.CONFIG['REGISTER']['LAN_PORT'];
-$worker->registerAddress = $registerAddress;
+$business->registerAddress = $registerAddress;
+
+$business->eventHandler=CONFIG['BUSINESS']['EVENT_HANDLER'];
 
 // 运行所有服务
 Worker::runAll();

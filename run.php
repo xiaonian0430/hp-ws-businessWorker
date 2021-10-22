@@ -8,6 +8,7 @@
 use Workerman\Worker;
 use GatewayWorker\BusinessWorker;
 
+//初始化
 ini_set('display_errors', 'on');
 defined('IN_PHAR') or define('IN_PHAR', boolval(\Phar::running(false)));
 defined('SERVER_ROOT') or define('SERVER_ROOT', IN_PHAR ? \Phar::running() : realpath(getcwd()));
@@ -25,8 +26,8 @@ if(!extension_loaded('posix')) {
 
 //自动加载文件
 require_once SERVER_ROOT . '/core/autoload.php';
-require_once SERVER_ROOT . '/Events.php';
 
+//导入配置文件
 $mode='produce';
 foreach ($argv as $item){
     $item_val=explode('=', $item);
@@ -41,8 +42,15 @@ if (!file_exists(SERVER_ROOT . '/config/'.$mode.'.php')) {
 }
 defined('CONFIG') or define('CONFIG', $conf);
 
-Worker::$stdoutFile = './tmp/log/error.log';
-Worker::$logFile = './tmp/log/workerman.log';
+//创建临时目录
+$temp_path='./tmp/log';
+if(!is_dir($temp_path)){
+    mkdir($temp_path, 0777, true);
+}
+
+//初始化worker
+Worker::$stdoutFile = $temp_path.'/error.log';
+Worker::$logFile = $temp_path.'/log.log';
 
 // businessWorker 进程
 $business = new BusinessWorker();

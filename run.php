@@ -25,7 +25,17 @@ if(!extension_loaded('posix')) {
 }
 
 //自动加载文件
-require_once SERVER_ROOT . '/core/autoload.php';
+$auto_file=SERVER_ROOT . '/vendor/autoload.php';
+if (file_exists($auto_file)) {
+    require_once $auto_file;
+} else {
+    exit("Please composer install.\n");
+}
+if (file_exists(SERVER_ROOT.'/Events.php')) {
+    require_once SERVER_ROOT.'/Events.php';
+} else {
+    exit("Events.php not exist.\n");
+}
 
 //导入配置文件
 $mode='produce';

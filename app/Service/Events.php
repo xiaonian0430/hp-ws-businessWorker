@@ -8,7 +8,7 @@
 namespace App\Service;
 use Exception;
 use GatewayWorker\Lib\Gateway;
-use App\Component\Singleton;
+use HP\Component\Singleton;
 
 /**
  * 事件管理

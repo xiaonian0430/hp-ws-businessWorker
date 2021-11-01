@@ -13,6 +13,13 @@ ini_set('display_errors', 'on');
 defined('IN_PHAR') or define('IN_PHAR', boolval(\Phar::running(false)));
 defined('SERVER_ROOT') or define('SERVER_ROOT', IN_PHAR ? \Phar::running() : realpath(getcwd()));
 
+//创建临时目录
+$temp_path=SERVER_ROOT.'/temp';
+$log_path=SERVER_ROOT.'/temp/log';
+if(!is_dir($log_path)){
+    mkdir($log_path, 0777, true);
+}
+
 // 检查扩展或环境
 if(strpos(strtolower(PHP_OS), 'win') === 0) {
     exit("start.php not support windows.\n");
@@ -31,6 +38,7 @@ if (file_exists($auto_file)) {
 } else {
     exit("Please composer install.\n");
 }
+
 if (file_exists(SERVER_ROOT.'/Events.php')) {
     require_once SERVER_ROOT.'/Events.php';
 } else {
@@ -53,15 +61,10 @@ if (file_exists($config_path)) {
 }
 defined('CONFIG') or define('CONFIG', $conf);
 
-//创建临时目录
-$temp_path='./temp/log';
-if(!is_dir($temp_path)){
-    mkdir($temp_path, 0777, true);
-}
-
 //初始化worker
-Worker::$stdoutFile = $temp_path.'/error.log';
-Worker::$logFile = $temp_path.'/log.log';
+Worker::$stdoutFile = $log_path.'/error.log';
+Worker::$logFile = $log_path.'/log.log';
+Worker::$pidFile = $temp_path.'/businessWorker.pid';
 
 // businessWorker 进程
 $business = new BusinessWorker();
